@@ -1,0 +1,106 @@
+{
+  "metadata": {
+    "project": "GeoPulse Retail Mobility Analytics",
+    "study_area": "Midtown Manhattan, NY",
+    "default_catchment_radius_meters": 250,
+    "crs": "EPSG:4326 (WGS84)",
+    "generated_at": "2026-11-12T16:38:23.346427+00:00"
+  },
+  "stores": [
+    {
+      "store_id": "STORE_A_EXISTING",
+      "name": "Herald Square Flagship",
+      "status": "EXISTING",
+      "lat": 40.7549,
+      "lon": -73.984,
+      "catchment_radius_meters": 250,
+      "address": "151 W 34th St, New York, NY 10001",
+      "borough": "Manhattan",
+      "neighborhood": "Herald Square / Midtown South"
+    },
+    {
+      "store_id": "STORE_B_PROPOSED_5TH",
+      "name": "Fifth Avenue Luxury Corridor",
+      "status": "PROPOSED",
+      "lat": 40.7565,
+      "lon": -73.9815,
+      "catchment_radius_meters": 250,
+      "address": "500 5th Ave, New York, NY 10110",
+      "borough": "Manhattan",
+      "neighborhood": "Midtown East / 5th Ave"
+    },
+    {
+      "store_id": "STORE_C_ALT_WEST",
+      "name": "West 34th District Alternative",
+      "status": "ALTERNATIVE",
+      "lat": 40.751,
+      "lon": -73.993,
+      "catchment_radius_meters": 250,
+      "address": "400 W 34th St, New York, NY 10001",
+      "borough": "Manhattan",
+      "neighborhood": "Hudson Yards / Penn Station West"
+    }
+  ],
+  "geojson": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -73.984,
+            40.7549
+          ]
+        },
+        "properties": {
+          "store_id": "STORE_A_EXISTING",
+          "name": "Herald Square Flagship",
+          "status": "EXISTING",
+          "catchment_radius_meters": 250,
+          "address": "151 W 34th St, New York, NY 10001",
+          "borough": "Manhattan",
+          "neighborhood": "Herald Square / Midtown South"
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -73.9815,
+            40.7565
+          ]
+        },
+        "properties": {
+          "store_id": "STORE_B_PROPOSED_5TH",
+          "name": "Fifth Avenue Luxury Corridor",
+          "status": "PROPOSED",
+          "catchment_radius_meters": 250,
+          "address": "500 5th Ave, New York, NY 10110",
+          "borough": "Manhattan",
+          "neighborhood": "Midtown East / 5th Ave"
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -73.993,
+            40.751
+          ]
+        },
+        "properties": {
+          "store_id": "STORE_C_ALT_WEST",
+          "name": "West 34th District Alternative",
+          "status": "ALTERNATIVE",
+          "catchment_radius_meters": 250,
+          "address": "400 W 34th St, New York, NY 10001",
+          "borough": "Manhattan",
+          "neighborhood": "Hudson Yards / Penn Station West"
+        }
+      }
+    ]
+  }
+}
