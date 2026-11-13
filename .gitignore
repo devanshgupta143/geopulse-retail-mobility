@@ -1,6 +1,8 @@
-# Data Files
+# Data Files & Pipeline Outputs
 *.csv
 *.parquet
+pyspark/output/
+output/
 
 # Virtual Environments
 .venv/
