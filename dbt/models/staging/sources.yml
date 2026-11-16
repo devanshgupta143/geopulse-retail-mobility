@@ -1,0 +1,106 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: "{{ env_var('SNOWFLAKE_DATABASE', 'GEOPULSE_DB') }}"
+    schema: BRONZE
+    description: >
+      Raw mobility ingestion layer containing direct extracts from mobile telemetry SDKs
+      and store location configurations. Loaded via automated stage ingestion and streams.
+    tables:
+      - name: RAW_GPS_PINGS
+        description: >
+          Raw stream of mobile device GPS ping telemetry across the Manhattan retail corridor.
+          Includes spatial coordinates, hardware timestamps, and metadata.
+        loaded_at_field: INGESTION_TIMESTAMP
+        freshness:
+          warn_after:
+            count: 12
+            period: hour
+          error_after:
+            count: 24
+            period: hour
+        columns:
+          - name: PING_ID
+            description: Unique surrogate identifier for the GPS ping event.
+            tests:
+              - not_null
+          - name: DEVICE_ID
+            description: Anonymized persistent identifier representing the mobile device.
+            tests:
+              - not_null
+          - name: LATITUDE
+            description: Decimal latitude coordinate of ping in WGS 84 (EPSG:4326).
+            tests:
+              - not_null
+          - name: LONGITUDE
+            description: Decimal longitude coordinate of ping in WGS 84 (EPSG:4326).
+            tests:
+              - not_null
+          - name: PING_TIMESTAMP
+            description: Timestamp recorded at device hardware clock when ping was captured (UTC).
+            tests:
+              - not_null
+          - name: INGESTION_TIMESTAMP
+            description: Warehouse arrival timestamp when record was staged into Snowflake.
+            tests:
+              - not_null
+          - name: RAW_PAYLOAD
+            description: Semi-structured VARIANT payload capturing sensor accuracy, battery, and speed.
+          - name: FILE_SOURCE
+            description: Ingested file name or stream partition origin.
+
+      - name: RAW_STORE_GEOFENCES
+        description: >
+          Raw retail network store boundary configurations including center points and radii.
+        loaded_at_field: INGESTION_TIMESTAMP
+        columns:
+          - name: STORE_ID
+            description: Unique business key identifying the store (e.g. STORE_A_EXISTING).
+            tests:
+              - not_null
+              - unique
+          - name: STORE_NAME
+            description: Human-readable location description.
+          - name: LATITUDE
+            description: Center latitude of the retail store geofence.
+          - name: LONGITUDE
+            description: Center longitude of the retail store geofence.
+          - name: CATCHMENT_RADIUS_METERS
+            description: Catchment buffer radius threshold in meters (default 250m).
+          - name: GEOJSON_POLYGON
+            description: GeoJSON polygon string representing store polygon boundary.
+          - name: INGESTION_TIMESTAMP
+            description: Timestamp when geofence config was ingested.
+
+  - name: silver
+    database: "{{ env_var('SNOWFLAKE_DATABASE', 'GEOPULSE_DB') }}"
+    schema: SILVER
+    description: >
+      Conformed spatial dimension and enriched intermediate data layer.
+    tables:
+      - name: STORE_CATCHMENTS
+        description: >
+          Curated spatial store dimension with Snowflake GEOGRAPHY objects (ST_BUFFER 250m)
+          and store categorization attributes.
+        loaded_at_field: UPDATED_AT
+        columns:
+          - name: STORE_ID
+            description: Store unique identifier.
+            tests:
+              - not_null
+              - unique
+          - name: STORE_NAME
+            description: Store descriptive name.
+          - name: STORE_TYPE
+            description: Classification (e.g. EXISTING, PROPOSED, ALTERNATIVE).
+          - name: CENTER_LATITUDE
+            description: Center latitude coordinate.
+          - name: CENTER_LONGITUDE
+            description: Center longitude coordinate.
+          - name: CATCHMENT_RADIUS_METERS
+            description: Catchment buffer radius in meters (250m).
+          - name: CATCHMENT_GEOGRAPHY
+            description: Native Snowflake GEOGRAPHY polygon representing the 250-meter buffer.
+          - name: UPDATED_AT
+            description: Last record modification timestamp.
