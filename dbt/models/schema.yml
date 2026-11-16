@@ -1,0 +1,141 @@
+version: 2
+
+models:
+  - name: stg_gps_pings
+    description: >
+      Cleaned, bounded, and deduplicated raw mobile telemetry GPS pings across Manhattan.
+    columns:
+      - name: ping_id
+        description: Primary surrogate key derived from device_id and timestamp.
+        tests:
+          - unique
+          - not_null
+
+      - name: device_id
+        description: Anonymized mobile device identifier.
+        tests:
+          - not_null
+
+      - name: latitude
+        description: Latitude coordinate within Manhattan bounding box [40.70, 40.85].
+        tests:
+          - not_null
+
+      - name: longitude
+        description: Longitude coordinate within Manhattan bounding box [-74.05, -73.90].
+        tests:
+          - not_null
+
+      - name: ping_timestamp
+        description: Hardware timestamp of the ping event.
+        tests:
+          - not_null
+
+      - name: ping_date
+        description: Truncated calendar date of ping.
+        tests:
+          - not_null
+
+      - name: ping_hour
+        description: Hour of the day (0 - 23).
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+
+      - name: is_morning_peak
+        description: Boolean indicator for morning rush hour (07:00 to 09:59).
+        tests:
+          - not_null
+
+  - name: fct_spatial_mobility
+    description: >
+      Incremental spatial fact table enriched with H3 hex indices, distance metrics to stores,
+      and catchment membership flags.
+    columns:
+      - name: ping_id
+        description: Primary key for mobility fact table.
+        tests:
+          - unique
+          - not_null
+
+      - name: device_id
+        description: Anonymized mobile device identifier.
+        tests:
+          - not_null
+
+      - name: ping_date
+        description: Partition clustering date key.
+        tests:
+          - not_null
+
+      - name: h3_index_res9
+        description: Hexagonal cell index at H3 resolution 9 (~100m radius).
+        tests:
+          - not_null
+
+      - name: nearest_store_id
+        description: Nearest retail store candidate.
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - 'STORE_A_EXISTING'
+                - 'STORE_B_PROPOSED_5TH'
+                - 'STORE_C_ALT_WEST'
+
+      - name: nearest_store_distance_meters
+        description: Distance in meters to the closest retail location.
+        tests:
+          - not_null
+
+  - name: mart_store_cannibalization
+    description: >
+      Gold analytical mart tracking foot traffic cannibalization between existing Store A
+      and proposed Store B.
+    columns:
+      - name: ping_date
+        description: Analytical calendar date.
+        tests:
+          - unique
+          - not_null
+
+      - name: store_a_unique_visitors
+        description: Count of unique mobile devices detected within Store A catchment.
+        tests:
+          - not_null
+
+      - name: store_b_unique_visitors
+        description: Count of unique mobile devices detected within Store B catchment.
+        tests:
+          - not_null
+
+      - name: shared_visitors_a_and_b
+        description: Count of devices observed in both store catchments on the same date.
+        tests:
+          - not_null
+
+      - name: risk_classification
+        description: Business risk tier based on cannibalization rate.
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - 'HIGH_CANNIBALIZATION_RISK'
+                - 'MODERATE_CANNIBALIZATION_RISK'
+                - 'LOW_CANNIBALIZATION_EXPANSION'
+
+seeds:
+  - name: manhattan_transit_hubs
+    description: >
+      Curated seed table of major rail and subway transit hubs in Midtown Manhattan.
+    columns:
+      - name: hub_id
+        description: Primary key for transit hub.
+        tests:
+          - unique
+          - not_null
+      - name: daily_ridership
+        description: Estimated weekday passenger footfall.
+        tests:
+          - not_null
