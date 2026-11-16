@@ -1,0 +1,51 @@
+name: 'geopulse_mobility'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which profile dbt uses for this project.
+profile: 'geopulse_mobility'
+
+# Model and asset paths
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+  - "logs"
+
+# Model materialization and configuration hierarchy
+models:
+  geopulse_mobility:
+    # Staging models: standardized, deduplicated views directly above Bronze
+    staging:
+      +materialized: view
+      +schema: SILVER
+      +tags: ["staging", "silver", "mobility"]
+
+    # Intermediate models: ephemeral transforms, sessionizations, and feature joins
+    intermediate:
+      +materialized: ephemeral
+      +tags: ["intermediate", "sessionization"]
+
+    # Marts: analytical Gold layer models (incremental facts and dimensional marts)
+    marts:
+      +materialized: table
+      +schema: GOLD
+      +tags: ["marts", "gold", "analytics"]
+      fct_spatial_mobility:
+        +materialized: incremental
+        +unique_key: ping_id
+        +incremental_strategy: merge
+        +cluster_by: ["ping_date", "h3_index_res9"]
+      mart_store_cannibalization:
+        +materialized: table
+
+seeds:
+  geopulse_mobility:
+    +schema: SILVER
+    +quote_columns: false

@@ -1,0 +1,28 @@
+geopulse_mobility:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT', 'xy12345.us-east-1') }}"
+      user: "{{ env_var('SNOWFLAKE_USER', 'DEV_ANALYTICS_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD', 'DevPassSecure123!') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE', 'SYSADMIN') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE', 'GEOPULSE_DB') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'COMPUTE_WH') }}"
+      schema: "{{ env_var('SNOWFLAKE_SCHEMA', 'SILVER') }}"
+      threads: 4
+      client_session_keep_alive: false
+      query_tag: "dbt_dev_geopulse_mobility"
+
+    prod:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT', 'xy12345.us-east-1') }}"
+      user: "{{ env_var('SNOWFLAKE_PROD_USER', 'PROD_DBT_TRANSFORMER') }}"
+      password: "{{ env_var('SNOWFLAKE_PROD_PASSWORD', 'ProdSecureTokenSecret999!') }}"
+      role: "{{ env_var('SNOWFLAKE_PROD_ROLE', 'SYSADMIN') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE', 'GEOPULSE_DB') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_PROD_WAREHOUSE', 'TRANSFORM_WH') }}"
+      schema: "{{ env_var('SNOWFLAKE_PROD_SCHEMA', 'GOLD') }}"
+      threads: 8
+      client_session_keep_alive: false
+      query_tag: "dbt_prod_geopulse_mobility"

@@ -1,8 +1,17 @@
 # Data Files & Pipeline Outputs
 *.csv
+!dbt/seeds/*.csv
 *.parquet
 pyspark/output/
 output/
+
+# dbt Artifacts & Logs
+dbt/target/
+target/
+dbt/dbt_packages/
+dbt_packages/
+dbt/logs/
+logs/
 
 # Virtual Environments
 .venv/
