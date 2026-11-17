@@ -34,6 +34,8 @@ except ImportError:
         def __init__(self, *args, **kwargs): pass
         def __enter__(self): return self
         def __exit__(self, *args): pass
+        def __rshift__(self, other): return other
+        def __lshift__(self, other): return other
 
 # Callback Imports
 try:

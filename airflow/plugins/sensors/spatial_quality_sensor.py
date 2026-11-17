@@ -27,6 +27,12 @@ except ImportError:
             for k, v in kwargs.items():
                 setattr(self, k, v)
 
+        def __rshift__(self, other):
+            return other
+
+        def __lshift__(self, other):
+            return other
+
     Context = Dict[str, Any]
     SnowflakeHook = None
     AirflowException = Exception

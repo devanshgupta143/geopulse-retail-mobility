@@ -11,9 +11,13 @@ Description: Structured Slack Webhook and observability callbacks for Airflow.
 import json
 import logging
 import os
+import urllib.request
 from typing import Any, Dict, List, Optional
 
-import requests
+try:
+    import requests
+except ImportError:
+    requests = None
 
 logger = logging.getLogger("airflow.callbacks.geopulse_alerts")
 
@@ -29,7 +33,7 @@ def _send_slack_notification(payload: Dict[str, Any], webhook_url: Optional[str]
     """Dispatches formatted JSON blocks payload to the configured Slack Webhook."""
     url = webhook_url or DEFAULT_SLACK_WEBHOOK
     try:
-        if "MOCK" in url or not url.startswith("http"):
+        if "MOCK" in url or not url.startswith("http") or requests is None:
             logger.info(f"[SIMULATED SLACK DISPATCH] Channel: {ALERT_CHANNEL}\n{json.dumps(payload, indent=2)}")
             return True
 
