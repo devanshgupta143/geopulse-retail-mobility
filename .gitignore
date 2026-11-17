@@ -13,6 +13,13 @@ dbt_packages/
 dbt/logs/
 logs/
 
+# Airflow Artifacts, Databases & Run States
+airflow/logs/
+airflow/*.db
+airflow/*.pid
+airflow/airflow-webserver.pid
+airflow/*.cfg.bak
+
 # Virtual Environments
 .venv/
 venv/

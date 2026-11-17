@@ -1,0 +1,28 @@
+# Airflow Core & Local Orchestration
+apache-airflow==2.9.3
+
+# Provider Packages
+apache-airflow-providers-snowflake==5.6.1
+apache-airflow-providers-common-sql==1.14.2
+apache-airflow-providers-slack==8.7.1
+
+# Cosmos & dbt Integration
+astronomer-cosmos==1.5.0
+dbt-core==1.8.2
+dbt-snowflake==1.8.3
+
+# Spatial Computing & Processing Engine
+pyspark==3.5.1
+h3==3.7.7
+shapely==2.0.4
+pyarrow==15.0.2
+pandas==2.2.2
+numpy==1.26.4
+
+# Testing & Quality
+pytest==8.2.2
+pytest-mock==3.14.0
+
+# Notifications & Observability
+requests==2.32.3
+slack-sdk==3.27.2
