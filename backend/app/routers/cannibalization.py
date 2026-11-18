@@ -56,9 +56,9 @@ def simulate_candidate_site(payload: SimulationRequest) -> SimulationResponse:
         {"latitude": 40.7549, "longitude": -73.9840, "radius_meters": 250.0}
     )
 
-    exist_lat = float(comparison_meta["latitude"])
-    exist_lon = float(comparison_meta["longitude"])
-    exist_radius = float(comparison_meta.get("radius_meters", 250.0))
+    exist_lat = float(comparison_meta.get("latitude") or comparison_meta.get("lat", 40.7549))
+    exist_lon = float(comparison_meta.get("longitude") or comparison_meta.get("lon", -73.9840))
+    exist_radius = float(comparison_meta.get("radius_meters") or comparison_meta.get("catchment_radius_meters", 250.0))
 
     sim_result = spatial_service.simulate_what_if_candidate(
         candidate_lat=payload.latitude,

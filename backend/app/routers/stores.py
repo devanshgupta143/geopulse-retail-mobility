@@ -34,11 +34,11 @@ def get_store_catchments() -> GeoJSONFeatureCollection:
 
     for s in stores_raw:
         store_id = s.get("store_id")
-        store_name = s.get("store_name", store_id)
-        store_type = s.get("store_type", "EXISTING")
-        lat = float(s.get("latitude"))
-        lon = float(s.get("longitude"))
-        radius = float(s.get("radius_meters", 250.0))
+        store_name = s.get("store_name") or s.get("name") or store_id
+        store_type = s.get("store_type") or s.get("status") or "EXISTING"
+        lat = float(s.get("latitude") or s.get("lat"))
+        lon = float(s.get("longitude") or s.get("lon"))
+        radius = float(s.get("catchment_radius_meters") or s.get("radius_meters") or 250.0)
 
         # Generate 250m circular buffer polygon
         catchment_poly = spatial_service.create_circular_catchment_polygon(
@@ -101,7 +101,7 @@ def get_store_traffic_trends(
 
     return StoreTrafficResponse(
         store_id=store_id,
-        store_name=store_meta.get("store_name", store_id),
+        store_name=store_meta.get("store_name") or store_meta.get("name") or store_id,
         date_filter=date_filter,
         total_visits=total_visits,
         unique_devices=unique_devices,

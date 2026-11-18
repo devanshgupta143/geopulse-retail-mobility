@@ -56,9 +56,9 @@ class GeoJSONFeatureCollection(BaseModel):
 
 class StoreCatchmentFeature(BaseModel):
     """Retail store geofence metadata and 250m circular buffer polygon."""
-    store_id: str = Field(..., example="STORE_A_EXISTING")
-    store_name: str = Field(..., example="Herald Square Flagship")
-    store_type: str = Field(..., example="EXISTING")
+    store_id: str = Field(..., json_schema_extra={"example": "STORE_A_EXISTING"})
+    store_name: str = Field(..., json_schema_extra={"example": "Herald Square Flagship"})
+    store_type: str = Field(..., json_schema_extra={"example": "EXISTING"})
     center_latitude: float = Field(..., ge=-90.0, le=90.0)
     center_longitude: float = Field(..., ge=-180.0, le=180.0)
     catchment_radius_meters: float = Field(default=250.0, gt=0.0)
@@ -82,9 +82,9 @@ class StoreCatchmentFeature(BaseModel):
 
 class HourlyTrafficPoint(BaseModel):
     """Hourly foot-traffic volume point for temporal profiling."""
-    hour: int = Field(..., ge=0, le=23, example=8)
-    visit_count: int = Field(..., ge=0, example=1240)
-    unique_devices: int = Field(..., ge=0, example=980)
+    hour: int = Field(..., ge=0, le=23, json_schema_extra={"example": 8})
+    visit_count: int = Field(..., ge=0, json_schema_extra={"example": 1240})
+    unique_devices: int = Field(..., ge=0, json_schema_extra={"example": 980})
     is_morning_peak: bool = Field(default=False)
     is_evening_peak: bool = Field(default=False)
 
@@ -107,10 +107,10 @@ class StoreTrafficResponse(BaseModel):
 
 class H3HexMetric(BaseModel):
     """H3 Resolution 9 hexagonal cell mobility density metric."""
-    h3_index: str = Field(..., example="892a100d2b7ffff")
+    h3_index: str = Field(..., json_schema_extra={"example": "892a100d2b7ffff"})
     resolution: int = Field(default=9, ge=7, le=10)
-    total_visits: int = Field(..., ge=0, example=452)
-    unique_devices: int = Field(..., ge=0, example=312)
+    total_visits: int = Field(..., ge=0, json_schema_extra={"example": 452})
+    unique_devices: int = Field(..., ge=0, json_schema_extra={"example": 312})
     morning_peak_visits: int = Field(default=0, ge=0)
     evening_peak_visits: int = Field(default=0, ge=0)
     centroid_latitude: float
@@ -164,10 +164,10 @@ class CannibalizationSummary(BaseModel):
 
 class SimulationRequest(BaseModel):
     """Payload for what-if retail site candidate simulation."""
-    candidate_store_id: str = Field(default="CANDIDATE_CUSTOM", example="STORE_EXPANSION_BROADWAY")
+    candidate_store_id: str = Field(default="CANDIDATE_CUSTOM", json_schema_extra={"example": "STORE_EXPANSION_BROADWAY"})
     candidate_name: str = Field(default="Broadway Expansion Site")
-    latitude: float = Field(..., ge=40.70, le=40.85, example=40.7535)
-    longitude: float = Field(..., ge=-74.05, le=-73.90, example=-73.9860)
+    latitude: float = Field(..., ge=40.70, le=40.85, json_schema_extra={"example": 40.7535})
+    longitude: float = Field(..., ge=-74.05, le=-73.90, json_schema_extra={"example": -73.9860})
     catchment_radius_meters: float = Field(default=250.0, gt=50.0, le=1000.0)
     comparison_store_id: str = Field(default="STORE_A_EXISTING")
 
